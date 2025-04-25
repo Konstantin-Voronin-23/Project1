@@ -10,7 +10,7 @@ def main_services() -> str:
 
     # 1) Поиска транзакций по описанию или категории
 
-    search_transactions = simple_search(PATH_TO_EXCEL, "Различные товары")
+    search_transactions = simple_search(PATH_TO_EXCEL, "")
 
     # 2) Поиск транзакций где в описании указан мобильный телефон
 
@@ -28,15 +28,20 @@ def main_services() -> str:
     choice = input("Ваш выбор (1-3): ")
 
     if choice == "1":
-        search_query = input("Введите текст для поиска: ")
+        print("\nВведите текст для поиска в описании или категории:")
+        print("(оставьте пустым для вывода всех транзакций)")
+        search_query = input("Поисковый запрос: ").strip()
+
         result = simple_search(PATH_TO_EXCEL, search_query)
         return json.dumps({"result": result}, ensure_ascii=False, indent=4)
 
     elif choice == "2":
+        print("\nПоиск транзакций с мобильными номерами...")
         result = find_mobile_payments(PATH_TO_EXCEL)
         return json.dumps({"result": result}, ensure_ascii=False, indent=4)
 
     elif choice == "3":
+        print("\nПоиск переводов физлицам...")
         result = find_person_transfers(PATH_TO_EXCEL)
         return json.dumps({"result": result}, ensure_ascii=False, indent=4)
 
