@@ -1,18 +1,11 @@
-from typing import Dict, Any
 import json
+
 from config import PATH_TO_EXCEL, PATH_TO_USER_SETTINGS
-from src.utils import (get_time_for_greeting,
-                       get_data_time,
-                       get_path_and_period,
-                       get_card_with_spend,
-                       get_card_with_spend,
-                       git_top_transaction,
-                       get_currency,
-                       get_stock
-                       )
+from src.utils import (get_card_with_spend, get_currency, get_data_time, get_path_and_period, get_stock,
+                       get_time_for_greeting, git_top_transaction)
 
 
-def main_info(date_time: str) -> Dict[str, Any]:
+def main_info(date_time: str) -> str:
     """Функция и главная функция, принимающая на вход строку с датой и временем в формате YYYY-MM-DD HH:MM:SS
     и возвращающую JSON-ответ"""
 
