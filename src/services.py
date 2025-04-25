@@ -1,24 +1,12 @@
 import json
-from src.utils import simple_search, find_mobile_payments, find_person_transfers
+
 from config import PATH_TO_EXCEL
-from typing import Optional
+from src.utils import find_mobile_payments, find_person_transfers, simple_search
 
 
 def main_services() -> str:
     """Функция которая принимает путь до EXCEL файла, и реализует три поисковика тразанкций на выбор,
     1. по описанию или категории | 2. По мобильному номеру в описании | 3. по переводам физ лицам"""
-
-    # 1) Поиска транзакций по описанию или категории
-
-    search_transactions = simple_search(PATH_TO_EXCEL, "")
-
-    # 2) Поиск транзакций где в описании указан мобильный телефон
-
-    search_transactions_mobile = find_mobile_payments(PATH_TO_EXCEL)
-
-    # 3) Поиск транзакций по переводам физ лицам
-
-    search_transactions_person = find_person_transfers(PATH_TO_EXCEL)
 
     print("\nВыберите тип поиска:")
     print("1 - По описанию или категории")

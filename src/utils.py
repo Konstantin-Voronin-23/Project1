@@ -9,7 +9,6 @@ import requests
 from dotenv import load_dotenv
 from pandas import DataFrame
 from twelvedata import TDClient  # type: ignore
-import re
 
 log_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), "logs", "utils.log")
 logger = logging.getLogger("utils")
@@ -190,37 +189,40 @@ def get_stock(path_to_json: str) -> list[dict]:
         return stock_rates
 
 
-def simple_search(path_to_file: str, search_query: str) -> DataFrame:
+def simple_search(path_to_file: str, search_query: str) -> List[Dict[str, Any]]:
     """Простой поиск по описанию или категории"""
 
-    df = pd.read_excel(path_to_file, sheet_name="Отчет по операциям")
+    df = pd.read_excel(path_to_file, sheet_name="Отчет по операциям", engine='openpyxl')
     mask = (df['Описание'].str.contains(search_query, case=False, na=False)) | \
            (df['Категория'].str.contains(search_query, case=False, na=False))
 
-    results = df[mask]
-    return json.loads(results.to_json(orient='records', force_ascii=False))
+    json_str = df[mask].to_json(orient='records', force_ascii=False)
+    result: List[Dict[str, Any]] = json.loads(json_str)
+    return result
 
 
-def find_mobile_payments(path_to_file:str) -> DataFrame:
+def find_mobile_payments(path_to_file: str) -> List[Dict[str, Any]]:
     """Поиск транзакций с мобильными номерами в описании"""
 
-    df = pd.read_excel(path_to_file, sheet_name="Отчет по операциям")
+    df = pd.read_excel(path_to_file, sheet_name="Отчет по операциям", engine='openpyxl')
     phone_pattern = r'(?:\+7|7|8)?[\s\-]?(?:[489][0-9]{2})?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}'
 
     mask = df['Описание'].str.contains(phone_pattern, na=False)
 
-    results = df[mask]
-    return json.loads(results.to_json(orient='records', force_ascii=False))
+    json_str = df[mask].to_json(orient='records', force_ascii=False)
+    result: List[Dict[str, Any]] = json.loads(json_str)
+    return result
 
 
-def find_person_transfers(path_to_file:str) -> DataFrame:
+def find_person_transfers(path_to_file: str) -> List[Dict[str, Any]]:
     """Поиск переводов физическим лицам"""
 
-    df = pd.read_excel(path_to_file, sheet_name="Отчет по операциям")
+    df = pd.read_excel(path_to_file, sheet_name="Отчет по операциям", engine='openpyxl')
     category_condition = (df['Категория'] == 'Переводы')
     name_pattern = r'^[А-ЯЁ][а-яё]+\s[А-ЯЁ]\.'
     description_condition = df['Описание'].str.contains(name_pattern, na=False)
     mask = category_condition & description_condition
 
-    results = df[mask]
-    return json.loads(results.to_json(orient='records', force_ascii=False))
+    json_str = df[mask].to_json(orient='records', force_ascii=False)
+    result: List[Dict[str, Any]] = json.loads(json_str)
+    return result

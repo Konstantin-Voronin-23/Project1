@@ -1,9 +1,9 @@
-import pytest
-from unittest.mock import patch, MagicMock, call
 import json
+from unittest.mock import patch
+
+import pytest
+
 from src.services import main_services
-from config import PATH_TO_EXCEL
-from src.utils import simple_search, find_mobile_payments, find_person_transfers
 
 
 @pytest.mark.parametrize("choice, input_value, expected_key", [
@@ -12,12 +12,9 @@ from src.utils import simple_search, find_mobile_payments, find_person_transfers
     ("3", "", "result"),  # Поиск переводов
     ("4", "", "error"),  # Неверный выбор
 ])
-
-
 def test_main_services_choices(choice, input_value, expected_key, mock_excel_path,
                                mock_simple_search_result, mock_mobile_payments_result,
                                mock_person_transfers_result):
-
     """Параметризованный тест для проверки различных вариантов выбора пользователя."""
 
     with patch('config.PATH_TO_EXCEL', mock_excel_path), \

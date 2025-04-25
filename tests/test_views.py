@@ -1,8 +1,9 @@
-import pytest
-from unittest.mock import patch, MagicMock
 import json
+from unittest.mock import MagicMock, patch
+
+import pytest
+
 from src.views import main_info
-from config import PATH_TO_EXCEL, PATH_TO_USER_SETTINGS
 
 
 def test_main_info_basic() -> None:
