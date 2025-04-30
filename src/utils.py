@@ -13,7 +13,7 @@ from twelvedata import TDClient  # type: ignore
 log_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), "logs", "utils.log")
 logger = logging.getLogger("utils")
 file_handler = logging.FileHandler(log_file, encoding="utf-8")
-file_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+file_formatter = logging.Formatter("%(asctime)s - %(filename)s - %(funcName)s - %(levelname)s: %(message)s")
 file_handler.setFormatter(file_formatter)
 logger.addHandler(file_handler)
 logger.setLevel(logging.DEBUG)
@@ -33,23 +33,23 @@ def get_time_for_greeting() -> str:
     user_datetime_hour = datetime.now().hour
 
     if 5 <= user_datetime_hour < 12:
-        logger.info("Успех! Доброе утро, при актуальном времени с 5 утра до 12")
+        logger.info("Успех! Доброе утро")
         return "Доброе утро"
     elif 12 <= user_datetime_hour < 18:
-        logger.info("Успех! Добрый день, при актуальном времени с 12 дня до 18")
+        logger.info("Успех! Добрый день")
         return "Добрый день"
     elif 18 <= user_datetime_hour < 22:
-        logger.info("Успех! Добрый вечер, при актуальном времени 18 вечера до 22 вечера")
+        logger.info("Успех! Добрый вечер")
         return "Добрый вечер"
     else:
-        logger.info("Успех! Доброй ночи, при актуальном времени с 22 часов вечера до 5 утра")
+        logger.info("Успех! Доброй ночи")
         return "Доброй ночи"
 
 
 def get_data_time(date_time: str, date_format: str = "%Y-%m-%d %H:%M:%S") -> list[str]:
     """Функция изменения формата даты и времени"""
 
-    logger.info("Запуск функции изменения формата даты и времени")
+    logger.info(f"Запуск функции изменения формата даты и времени с аргументами {date_time} и {date_format}")
     dt = datetime.strptime(date_time, date_format)
     start_of_month = dt.replace(day=1)
 
@@ -63,7 +63,7 @@ def get_data_time(date_time: str, date_format: str = "%Y-%m-%d %H:%M:%S") -> lis
 def get_path_and_period(path_to_file: str, period_date: list) -> DataFrame:
     """Функция принимает путь к Excel файлу и список дат, и возвращает табилицу в заданном периоде"""
 
-    logger.info("Запуск функции среза по дате в excel файле")
+    logger.info(f"Запуск функции среза по дате в excel файле с аргументами {path_to_file} и {period_date}")
     df = pd.read_excel(path_to_file, sheet_name="Отчет по операциям")
 
     df["Дата операции"] = pd.to_datetime(df["Дата операции"], dayfirst=True)
@@ -74,14 +74,14 @@ def get_path_and_period(path_to_file: str, period_date: list) -> DataFrame:
     ]
     sorted_df = filter_df.sort_values(by="Дата операции", ascending=True)
 
-    logger.info("Успех! Получен срез даты от и до")
+    logger.info("Успех! Получен срез даты")
     return sorted_df
 
 
 def get_card_with_spend(sorted_df: DataFrame) -> List[Dict[str, Any]]:
     """Функция принимает DataFrame и возвращает список карт с расходами"""
 
-    logger.info("Запуск функции со списком карт по которым были расходы")
+    logger.info(f"Запуск функции со списком карт по которым были расходы с аргументом {sorted_df}")
     card_spend_transactions = []
     card_sorted = sorted_df[
         [
@@ -106,7 +106,7 @@ def get_card_with_spend(sorted_df: DataFrame) -> List[Dict[str, Any]]:
 def git_top_transaction(sorted_df: DataFrame, get_top: int) -> list[dict]:
     """Функция принимает DataFrame и возвращает топ-транзакций по сумме платежа"""
 
-    logger.info("Запуск функции по топ-транзакциям")
+    logger.info(f"Запуск функции по топ-транзакциям с аргументами {sorted_df} и {get_top}")
     top_pay_transactions = []
     sorted_pay_df = sorted_df.sort_values(by="Сумма операции", ascending=False)
     top_transactions = sorted_pay_df.head(get_top)
@@ -133,7 +133,7 @@ def git_top_transaction(sorted_df: DataFrame, get_top: int) -> list[dict]:
 def get_currency(path_to_json: str) -> list[dict]:
     """Функция принимает на вход path_to_json и возвращает курс валют"""
 
-    logger.info("Запуск функции которая получает актуальный курс валют")
+    logger.info(f"Запуск функции которая получает актуальный курс валют с аргументом {path_to_json}")
     currency_rates = []
     with open(path_to_json, "r", encoding="utf-8") as file:
         data = json.load(file)
@@ -165,7 +165,7 @@ def get_currency(path_to_json: str) -> list[dict]:
 def get_stock(path_to_json: str) -> list[dict]:
     """Функция принимает на вход path_to_json и возвращает курс акций"""
 
-    logger.info("Запуск функции которая получает актуальный курс акций SP500")
+    logger.info(f"Запуск функции которая получает актуальный курс акций SP500 с аргументом {path_to_json}")
     stock_rates = []
     td = TDClient(apikey=API_KEY_SP500)
     with open(path_to_json, "r", encoding="utf-8") as file:
@@ -192,18 +192,21 @@ def get_stock(path_to_json: str) -> list[dict]:
 def simple_search(path_to_file: str, search_query: str) -> List[Dict[str, Any]]:
     """Простой поиск по описанию или категории"""
 
+    logger.info(f"Запуск функции простого поиска с аргументами {path_to_file} и {search_query}")
     df = pd.read_excel(path_to_file, sheet_name="Отчет по операциям", engine='openpyxl')
     mask = (df['Описание'].str.contains(search_query, case=False, na=False)) | \
            (df['Категория'].str.contains(search_query, case=False, na=False))
 
     json_str = df[mask].to_json(orient='records', force_ascii=False)
     result: List[Dict[str, Any]] = json.loads(json_str)
+    logger.info("Успех! Данные отфильтрованы по описанию | категории")
     return result
 
 
 def find_mobile_payments(path_to_file: str) -> List[Dict[str, Any]]:
     """Поиск транзакций с мобильными номерами в описании"""
 
+    logger.info(f"Запуск функции поиска транзакций с мобильными номерами в описании с аргмуентом {path_to_file}")
     df = pd.read_excel(path_to_file, sheet_name="Отчет по операциям", engine='openpyxl')
     phone_pattern = r'(?:\+7|7|8)?[\s\-]?(?:[489][0-9]{2})?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}'
 
@@ -211,12 +214,14 @@ def find_mobile_payments(path_to_file: str) -> List[Dict[str, Any]]:
 
     json_str = df[mask].to_json(orient='records', force_ascii=False)
     result: List[Dict[str, Any]] = json.loads(json_str)
+    logger.info("Успех! Данные с номером телефона в описании транзакций отфильтрованы")
     return result
 
 
 def find_person_transfers(path_to_file: str) -> List[Dict[str, Any]]:
     """Поиск переводов физическим лицам"""
 
+    logger.info(f"Запуск функции поиска переводов физическим лицам с аргументом {path_to_file}")
     df = pd.read_excel(path_to_file, sheet_name="Отчет по операциям", engine='openpyxl')
     category_condition = (df['Категория'] == 'Переводы')
     name_pattern = r'^[А-ЯЁ][а-яё]+\s[А-ЯЁ]\.'
@@ -225,4 +230,5 @@ def find_person_transfers(path_to_file: str) -> List[Dict[str, Any]]:
 
     json_str = df[mask].to_json(orient='records', force_ascii=False)
     result: List[Dict[str, Any]] = json.loads(json_str)
+    logger.info("Успех! Данные с переводами физ лицам отфильтрованы")
     return result
