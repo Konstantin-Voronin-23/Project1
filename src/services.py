@@ -33,19 +33,19 @@ def main_services() -> str:
 
         result = simple_search(PATH_TO_EXCEL, search_query)
         logger.info("Успех! Выбран поиск по описанию | категории")
-        return json.dumps({"result": result}, ensure_ascii=False, indent=4)
+        return json.dumps({"Результат": result}, ensure_ascii=False, indent=4)
 
     elif choice == "2":
         print("\nПоиск транзакций с мобильными номерами...")
         result = find_mobile_payments(PATH_TO_EXCEL)
         logger.info("Успех! Выбран поиск по номеру телефона")
-        return json.dumps({"result": result}, ensure_ascii=False, indent=4)
+        return json.dumps({"Результат": result}, ensure_ascii=False, indent=4)
 
     elif choice == "3":
         print("\nПоиск переводов физлицам...")
         result = find_person_transfers(PATH_TO_EXCEL)
         logger.info("Успех! Выбран поиск по переводам физ лицам")
-        return json.dumps({"result": result}, ensure_ascii=False, indent=4)
+        return json.dumps({"Результат": result}, ensure_ascii=False, indent=4)
 
     else:
         logger.error("error: Неверный выбор")
