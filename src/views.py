@@ -15,11 +15,11 @@ logger.addHandler(file_handler)
 logger.setLevel(logging.DEBUG)
 
 
-logger.info("Запуск функции главной страницы с заданными параметрами")
 def main_info(date_time: str) -> str:
     """Функция и главная функция, принимающая на вход строку с датой и временем в формате YYYY-MM-DD HH:MM:SS
     и возвращающую JSON-ответ"""
 
+    logger.info("Запуск функции главной страницы с заданными параметрами")
     # Срез всего экселя на диапозон
     time_period = get_data_time(date_time)
     sorted_df = get_path_and_period(PATH_TO_EXCEL, time_period)
@@ -31,7 +31,7 @@ def main_info(date_time: str) -> str:
 
     # 2) По каждой карте
 
-    logger.info(f"Запуск функции со списком карт по которым были расходы")
+    logger.info("Запуск функции со списком карт по которым были расходы")
     cards = get_card_with_spend(sorted_df)
 
     # 3) Топ-5 транзакций по сумме платежа

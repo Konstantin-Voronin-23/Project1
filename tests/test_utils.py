@@ -1,28 +1,15 @@
-import unittest
-from unittest.mock import patch, MagicMock
-from datetime import datetime
-import pandas as pd
 import json
-from io import StringIO
-import os
+import unittest
+from unittest.mock import MagicMock, patch
 
-from src.utils import (
-    get_time_for_greeting,
-    get_data_time,
-    get_path_and_period,
-    get_card_with_spend,
-    git_top_transaction,
-    get_currency,
-    get_stock,
-    simple_search,
-    find_mobile_payments,
-    find_person_transfers
-)
+import pandas as pd
+
+from src.utils import (find_mobile_payments, find_person_transfers, get_card_with_spend, get_currency, get_data_time,
+                       get_path_and_period, get_stock, get_time_for_greeting, git_top_transaction, simple_search)
 
 
 class TestUtilsFunctions(unittest.TestCase):
     """Тесты для функций модуля utils"""
-
 
     @patch('src.utils.datetime')
     def test_get_time_for_greeting(self, mock_datetime):
@@ -40,7 +27,6 @@ class TestUtilsFunctions(unittest.TestCase):
         mock_datetime.now.return_value.hour = 23
         self.assertEqual(get_time_for_greeting(), "Доброй ночи")
 
-
     def test_get_data_time(self):
         """Тест проверяет корректность преобразования формата даты и времени,
         а также правильность вычисления начала месяца."""
@@ -53,7 +39,6 @@ class TestUtilsFunctions(unittest.TestCase):
         test_date_custom = "2023/05/15 14-30-00"
         expected_custom = ["01.05.2023 14:30:00", "15.05.2023 14:30:00"]
         self.assertEqual(get_data_time(test_date_custom, custom_format), expected_custom)
-
 
     @patch('src.utils.pd.read_excel')
     def test_get_path_and_period(self, mock_read_excel):
@@ -74,7 +59,6 @@ class TestUtilsFunctions(unittest.TestCase):
         self.assertEqual(len(result), 3)
         self.assertEqual(result.iloc[0]["Дата операции"].strftime("%d.%m.%Y"), "01.05.2023")
 
-
     def test_get_card_with_spend(self):
         """Тест проверяет корректность: |Фильтрации только расходных операций| Форматирования номеров карт
         | Расчет кэшбэка"""
@@ -93,7 +77,6 @@ class TestUtilsFunctions(unittest.TestCase):
         self.assertEqual(result[0]["last_digits"], "12345678")
         self.assertEqual(result[0]["cashback"], -1)
 
-
     def test_git_top_transaction(self):
         """Тест проверяет: |Корректность выбора топ-N транзакций| Правильность сортировки по сумме (по убыванию)
         | Формат возвращаемых данных"""
@@ -110,7 +93,6 @@ class TestUtilsFunctions(unittest.TestCase):
 
         self.assertEqual(len(result), 2)
         self.assertEqual(result[0]["amount"], "500")
-
 
     @patch('src.utils.requests.request')
     @patch.dict('os.environ', {'API_KEY_CURRENCY': 'test_key'})
@@ -147,7 +129,6 @@ class TestUtilsFunctions(unittest.TestCase):
         self.assertEqual(result[1]["currency"], "EUR")
         self.assertEqual(result[1]["rates"], "85.3")
 
-
     @patch('src.utils.TDClient')
     def test_get_stock(self, mock_tdclient):
         """Тест проверяет: | Корректность работы с Twelve Data API| Парсинг JSON файла с акциями
@@ -170,7 +151,6 @@ class TestUtilsFunctions(unittest.TestCase):
         self.assertEqual(result[0]["symbol"], "AAPL")
         self.assertEqual(result[0]["price"], 150.25)
 
-
     @patch('src.utils.pd.read_excel')
     def test_simple_search(self, mock_read_excel):
         """Тест проверяет: | Поиск по описанию транзакции| Поиск по категории транзакции
@@ -191,7 +171,6 @@ class TestUtilsFunctions(unittest.TestCase):
         result_cat = simple_search("dummy_path.xlsx", "услуг")
         self.assertEqual(len(result_cat), 1)
         self.assertEqual(result_cat[0]["Категория"], "Услуги")
-
 
     @patch('src.utils.pd.read_excel')
     def test_find_mobile_payments(self, mock_read_excel):
@@ -214,7 +193,6 @@ class TestUtilsFunctions(unittest.TestCase):
 
         self.assertEqual(len(result), 2)
         self.assertTrue("+79161234567" in result[0]["Описание"] or "89161234568" in result[0]["Описание"])
-
 
     @patch('src.utils.pd.read_excel')
     def test_find_person_transfers(self, mock_read_excel):
