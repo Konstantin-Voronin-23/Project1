@@ -118,7 +118,7 @@ poetry add openpyxl
 
 </details>
 
-# **Тесторирование модулей**:
+# **Тестирование модулей**:
 
 <details>
 <summary><b>❗ МОДУЛЬ UTILS ❗</b></summary>
