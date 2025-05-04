@@ -187,3 +187,42 @@ def get_stock(path_to_json: str) -> list[dict]:
             })
         logger.info("Успех! Получен курс акций SP500")
         return stock_rates
+
+
+def simple_search(path_to_file: str, search_query: str) -> List[Dict[str, Any]]:
+    """Простой поиск по описанию или категории"""
+
+    df = pd.read_excel(path_to_file, sheet_name="Отчет по операциям", engine='openpyxl')
+    mask = (df['Описание'].str.contains(search_query, case=False, na=False)) | \
+           (df['Категория'].str.contains(search_query, case=False, na=False))
+
+    json_str = df[mask].to_json(orient='records', force_ascii=False)
+    result: List[Dict[str, Any]] = json.loads(json_str)
+    return result
+
+
+def find_mobile_payments(path_to_file: str) -> List[Dict[str, Any]]:
+    """Поиск транзакций с мобильными номерами в описании"""
+
+    df = pd.read_excel(path_to_file, sheet_name="Отчет по операциям", engine='openpyxl')
+    phone_pattern = r'(?:\+7|7|8)?[\s\-]?(?:[489][0-9]{2})?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}'
+
+    mask = df['Описание'].str.contains(phone_pattern, na=False)
+
+    json_str = df[mask].to_json(orient='records', force_ascii=False)
+    result: List[Dict[str, Any]] = json.loads(json_str)
+    return result
+
+
+def find_person_transfers(path_to_file: str) -> List[Dict[str, Any]]:
+    """Поиск переводов физическим лицам"""
+
+    df = pd.read_excel(path_to_file, sheet_name="Отчет по операциям", engine='openpyxl')
+    category_condition = (df['Категория'] == 'Переводы')
+    name_pattern = r'^[А-ЯЁ][а-яё]+\s[А-ЯЁ]\.'
+    description_condition = df['Описание'].str.contains(name_pattern, na=False)
+    mask = category_condition & description_condition
+
+    json_str = df[mask].to_json(orient='records', force_ascii=False)
+    result: List[Dict[str, Any]] = json.loads(json_str)
+    return result
