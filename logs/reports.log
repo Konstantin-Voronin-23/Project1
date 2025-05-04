@@ -1,0 +1,17 @@
+2025-04-30 17:36:34,371 - reports.py - wrapper - INFO: Сформирован JSON-ответ "Отчеты"
+2025-04-30 18:19:11,127 - reports.py - get_dataframe - INFO: DataFrame получен
+2025-04-30 18:19:11,143 - reports.py - wrapper - INFO: Сформирован JSON-ответ "Отчеты"
+2025-04-30 18:22:09,418 - reports.py - get_dataframe - INFO: DataFrame получен
+2025-04-30 18:22:09,434 - reports.py - wrapper - INFO: Сформирован JSON-ответ "Отчеты"
+2025-04-30 19:42:01,615 - reports.py - wrapper - INFO: Сформирован JSON-ответ "Отчеты"
+2025-04-30 19:43:49,679 - reports.py - wrapper - INFO: Сформирован JSON-ответ "Отчеты"
+2025-04-30 21:46:47,210 - reports.py - get_dataframe - INFO: DataFrame получен
+2025-04-30 21:46:47,214 - reports.py - wrapper - INFO: Сформирован JSON-ответ "Отчеты"
+2025-04-30 21:47:02,761 - reports.py - get_dataframe - INFO: DataFrame получен
+2025-04-30 21:47:02,765 - reports.py - wrapper - INFO: Сформирован JSON-ответ "Отчеты"
+2025-04-30 21:47:22,010 - reports.py - get_dataframe - INFO: DataFrame получен
+2025-04-30 21:47:22,026 - reports.py - wrapper - INFO: Сформирован JSON-ответ "Отчеты"
+2025-04-30 21:49:55,111 - reports.py - get_dataframe - INFO: DataFrame получен
+2025-04-30 21:49:55,125 - reports.py - wrapper - INFO: Сформирован JSON-ответ "Отчеты"
+2025-05-01 00:54:43,919 - reports.py - wrapper - INFO: Сформирован JSON-ответ "Отчеты"
+2025-05-01 00:57:20,738 - reports.py - wrapper - INFO: Сформирован JSON-ответ "Отчеты"
